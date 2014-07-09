@@ -14,7 +14,8 @@ Form.editors.NestedModel = Form.editors.Object.extend({
     if (!options.schema.model) throw new Error('Missing required "schema.model" option for NestedModel editor');
 
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
-    var NestedForm = this.form.NestedForm;
+    var NestedForm = options.NestedForm || this.NestedForm || this.constructor.NestedForm || this.form.NestedForm;
+    var NestedField = options.NestedField || this.NestedField || this.constructor.NestedField || NestedForm.NestedField;
 
     var data = this.value || {},
         key = this.key,
@@ -26,7 +27,7 @@ Form.editors.NestedModel = Form.editors.Object.extend({
     this.nestedForm = new NestedForm({
       model: modelInstance,
       idPrefix: this.id + '_',
-      fieldTemplate: 'nestedField'
+      Field: NestedField
     });
   },
 

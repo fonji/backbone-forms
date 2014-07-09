@@ -24,14 +24,15 @@ Form.editors.Object = Form.editors.Base.extend({
     if (!this.schema.subSchema) throw new Error("Missing required 'schema.subSchema' option for Object editor");
 
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
-    var NestedForm = this.form.NestedForm;
+    var NestedForm = options.NestedForm || this.NestedForm || this.constructor.NestedForm || this.form.NestedForm;
+    var NestedField = options.NestedField || this.NestedField || this.constructor.NestedField || NestedForm.NestedField;
 
     //Create the nested form
     this.nestedForm = new NestedForm({
       schema: this.schema.subSchema,
       data: this.value,
       idPrefix: this.id + '_',
-      Field: NestedForm.NestedField
+      Field: NestedField
     });
   },
 
