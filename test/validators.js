@@ -153,6 +153,9 @@
   test('fails non-number values', function() {
     ok(fn('foo'))
     ok(fn('123a'))
+    ok(fn('-.'))
+    ok(fn('.5'))
+    ok(fn('5.'))
   })
   
   test('accepts numbers', function() {
@@ -160,6 +163,42 @@
     equal(fn(456), undefined)
     equal(fn(123.3), undefined)
     equal(fn('123.5'), undefined)
+    equal(fn('-123.5'), undefined)
+    equal(fn(-123.5), undefined)
+    equal(fn(0.5), undefined)
+  })
+  
+})();
+
+
+;(function() {
+  module('range')
+  
+  var fn = Form.validators.range()
+  
+  test('passes empty values', function() {
+    equal(fn(''), undefined)
+    equal(fn(null), undefined)
+    equal(fn(undefined), undefined)
+  })
+  
+  test('fails non-number values', function() {
+    ok(fn('foo'))
+    ok(fn('123a'))
+  })
+  
+  test('accepts numbers in range', function() {
+    equal(fn('12'), undefined)
+    equal(fn(45), undefined)
+    equal(fn(13.3), undefined)
+    equal(fn('23.5'), undefined)
+  })
+  
+  test('fails numbers out of range', function() {
+    ok(fn('123'))
+    ok(fn(456))
+    ok(fn('-1'))
+    ok(fn(-2))
   })
   
 })();
