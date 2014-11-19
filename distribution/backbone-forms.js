@@ -1664,6 +1664,7 @@ Form.editors.Select = Form.editors.Base.extend({
     Form.editors.Base.prototype.initialize.call(this, options);
 
     if (!this.schema || !this.schema.options) throw new Error("Missing required 'schema.options'");
+    if (this.schema.multiple) this.$el.attr('multiple', 'multiple');
   },
 
   render: function() {
@@ -1791,6 +1792,10 @@ Form.editors.Select = Form.editors.Base.extend({
     if (!this.hasFocus) return;
 
     this.$el.blur();
+  },
+
+  disable: function() {
+    this.$el.attr('disabled', true);
   },
 
   /**
