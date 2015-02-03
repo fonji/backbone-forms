@@ -1,11 +1,11 @@
 /**
  * NUMBER
- * 
+ *
  * Normal text input that only allows a number. Letters etc. are not entered.
  */
 Form.editors.Number = Form.editors.Text.extend({
 
-  defaultValue: 0,
+  defaultValue: '',
 
   events: _.extend({}, Form.editors.Text.prototype.events, {
     'keypress': 'onKeyPress',
@@ -49,7 +49,7 @@ Form.editors.Number = Form.editors.Text.extend({
       newVal = newVal + String.fromCharCode(event.charCode);
     }
 
-    var numeric = /^[0-9]*\.?[0-9]*?$/.test(newVal);
+    var numeric = /^[0-9]*[\.]?[0-9]*?$/.test(newVal); // TODO: allow ',', needs IE support
 
     if (numeric) {
       delayedDetermineChange();
