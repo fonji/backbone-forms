@@ -670,7 +670,7 @@ Validators can be defined in several ways:
 - **As a string** - Shorthand for adding a built-in validator. You can add custom validators to this list by adding them to `Backbone.Form.validators`. See the source for more information.
 - **As an object** - For adding a built-in validator with options, e.g. overriding the default error message.
 - **As a function** - Runs a custom validation function. Each validator the following arguments: `value` and `formValues`
-- **As a regular expression** - Runs the built-in `regexp` validator with a custom regular expresssion.
+- **As a regular expression** - Runs the built-in `regexp` validator with a custom regular expression.
 
 ###Built-in validators
 
@@ -951,7 +951,7 @@ var CustomEditor = Backbone.Form.editors.Base.extend({
     focus: function() {
         if (this.hasFocus) return;
 
-        // This method call should result in an input within this edior
+        // This method call should result in an input within this editor
         // becoming the `document.activeElement`.
         // This, in turn, should result in this editor's `focus` event
         // being triggered, setting `this.hasFocus` to `true`.
@@ -986,6 +986,7 @@ var CustomEditor = Backbone.Form.editors.Base.extend({
 ##Changelog
 
 ###master
+- Add ability to skip wrapping field for certain editors via the `noField` property
 - Allow `fieldsets` to be defined on model (fonji)
 - Add `submitButton` to form constructor. Adds a submit button with given text.
 - No longer require jquery from within the CommonJS module. NOTE: You must now set Backbone.$ yourself if using CommonJS e.g. browserify
