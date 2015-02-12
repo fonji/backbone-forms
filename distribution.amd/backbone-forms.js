@@ -1653,6 +1653,7 @@ Form.editors.Select = Form.editors.Base.extend({
     Form.editors.Base.prototype.initialize.call(this, options);
 
     if (!this.schema || !this.schema.options) throw new Error("Missing required 'schema.options'");
+    _.defaults(this.schema, { showPleaseSelect: true, plaseSelectText: (this.plaseSelectText || 'Please select') });
     if (this.schema.multiple) this.$el.attr('multiple', 'multiple');
   },
 
@@ -1834,6 +1835,10 @@ Form.editors.Select = Form.editors.Base.extend({
    */
   _arrayToHtml: function(array) {
     var html = $();
+
+    if (this.schema.showPleaseSelect) {
+      html = html.add( $('<option>').val('').text(this.schema.plaseSelectText).attr('disabled', true) );
+    }
 
     //Generate HTML
     _.each(array, function(option) {
