@@ -1666,7 +1666,7 @@ Form.editors.Select = Form.editors.Base.extend({
     Form.editors.Base.prototype.initialize.call(this, options);
 
     if (!this.schema || !this.schema.options) throw new Error("Missing required 'schema.options'");
-    _.defaults(this.schema, { showPleaseSelect: true, plaseSelectText: (this.plaseSelectText || 'Please select') });
+    _.defaults(this.schema, { showPleaseSelect: true, pleaseSelectText: (this.pleaseSelectText || 'Please select') });
     if (this.schema.multiple) this.$el.attr('multiple', 'multiple');
   },
 
@@ -1850,7 +1850,7 @@ Form.editors.Select = Form.editors.Base.extend({
     var html = $();
 
     if (this.schema.showPleaseSelect) {
-      html = html.add( $('<option>').val('').text(this.schema.plaseSelectText).attr('disabled', true) );
+      html = html.add( $('<option>').val('').text(this.schema.pleaseSelectText).attr('disabled', true) );
     }
 
     //Generate HTML
@@ -2298,7 +2298,10 @@ Form.editors.Date = Form.editors.Base.extend({
 
     //Cast to Date
     if (this.value && !_.isDate(this.value)) {
-      this.value = new Date(this.value);
+      if (moment && moment(this.value).isValid())
+        this.value = moment(this.value).toDate();
+      else
+        this.value = new Date(this.value);
     }
 
     //Set default date
