@@ -52,7 +52,10 @@ Form.editors.Date = Form.editors.Base.extend({
 
     //Cast to Date
     if (this.value && !_.isDate(this.value)) {
-      this.value = new Date(this.value);
+      if (moment && moment(this.value).isValid())
+        this.value = moment(this.value).toDate();
+      else
+        this.value = new Date(this.value);
     }
 
     //Set default date
