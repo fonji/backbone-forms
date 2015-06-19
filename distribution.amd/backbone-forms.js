@@ -794,6 +794,10 @@ Form.Field = Backbone.View.extend({
 
     //Override defaults
     this.template = options.template || schema.template || this.template || this.constructor.template;
+    // TODO: this is a POC
+    if (_.isString(this.template) && JST && _.isFunction(JST[this.template])) {
+      this.template = JST[this.template];
+    }
     this.errorClassName = options.errorClassName || this.errorClassName || this.constructor.errorClassName;
 
     //Create editor
