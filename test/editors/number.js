@@ -8,7 +8,7 @@
   test('Default value', function() {
     var editor = new Editor().render();
 
-    same(editor.getValue(), 0);
+    same(editor.getValue(), null);
   });
 
   test('Null value', function() {
@@ -129,7 +129,7 @@
 
     teardown: function() {
       this.sinon.restore();
-      
+
       this.editor.remove();
     }
   });

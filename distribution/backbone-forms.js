@@ -1509,10 +1509,10 @@ Form.editors.Number = Form.editors.Text.extend({
     //Get the whole new value so that we can prevent things like double decimals points etc.
     var newVal = this.$el.val()
     if( event.charCode != undefined ) {
-      newVal = newVal + String.fromCharCode(event.charCode);
+      newVal += String.fromCharCode(event.charCode);
     }
 
-    var numeric = /^[0-9]*[\.]?[0-9]*?$/.test(newVal); // TODO: allow ',', needs IE support
+    var numeric = /^[0-9]*[\.|,]?[0-9]*?$/.test(newVal);
 
     if (numeric) {
       delayedDetermineChange();
@@ -1522,17 +1522,21 @@ Form.editors.Number = Form.editors.Text.extend({
     }
   },
 
+  parseString: function(value) {
+    return value === "" ? null : parseFloat(value.replace(',','.'), 10);
+  },
+
   getValue: function() {
     var value = this.$el.val();
-
-    return value === "" ? null : parseFloat(value, 10);
+    return this.parseString(value);
   },
 
   setValue: function(value) {
+    var self = this;
     value = (function() {
       if (_.isNumber(value)) return value;
 
-      if (_.isString(value) && value !== '') return parseFloat(value, 10);
+      if (_.isString(value)) return self.parseString(value);
 
       return null;
     })();

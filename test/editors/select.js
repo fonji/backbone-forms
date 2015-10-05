@@ -23,7 +23,8 @@
   });
 
   var schema = {
-    options: ['Sterling', 'Lana', 'Cyril', 'Cheryl', 'Pam']
+    options: ['Sterling', 'Lana', 'Cyril', 'Cheryl', 'Pam'],
+    showPleaseSelect: false
   };
 
   var optGroupSchema = {
@@ -36,7 +37,8 @@
         group: 'Countries',
         options: [{val: 'fr', label: 'France'}, {val: 'cn', label: 'China'}]
       }
-    ]
+    ],
+    showPleaseSelect: false
   };
 
 
@@ -133,8 +135,9 @@
             group: 'Countries',
             options: '<option value="fr">France</option><option value="cn">China</option>'
           }
-        ]
-      }
+        ],
+        showPleaseSelect: false
+      },
     }).render();
 
     var group = editor.$('optgroup').first();
@@ -151,7 +154,8 @@
           ok(thisEditor instanceof Editor);
           ok(thisEditor instanceof Form.editors.Base);
           callback(optGroupSchema.options);
-        }
+        },
+        showPleaseSelect: false
       }
     }).render();
 
@@ -184,7 +188,8 @@
               callback(optGroupSchema.options[1].options);
             }
           }
-        ]
+        ],
+        showPleaseSelect: false
       }
     }).render();
 
@@ -213,7 +218,8 @@
             ok(thisEditor instanceof Form.editors.Base);
             callback(['VolksWagen', 'Fiat', 'Opel', 'Tesla']);
           }}
-        ]
+        ],
+        showPleaseSelect: false
       }
     }).render();
 
@@ -261,7 +267,8 @@
             group: 'Cities',
             options: cities
           }
-        ]
+        ],
+        showPleaseSelect: false
       }
     }).render();
 
@@ -291,7 +298,8 @@
   test('Options as array of items', function() {
     var editor = new Editor({
       schema: {
-        options: ['Matilda', 'Larry']
+        options: ['Matilda', 'Larry'],
+        showPleaseSelect: false
       }
     }).render();
 
@@ -307,7 +315,8 @@
         options: [
           { val: 'kid1', label: 'Teo' },
           { val: 'kid2', label: 'Lilah' },
-        ]
+        ],
+        showPleaseSelect: false
       }
     }).render();
 
@@ -322,7 +331,8 @@
   test('Options as any object', function() {
     var editor = new Editor({
       schema: {
-        options: {y:"Yes",n:"No"}
+        options: {y:"Yes",n:"No"},
+        showPleaseSelect: false
       }
     }).render();
 
@@ -341,7 +351,8 @@
           ok(thisEditor instanceof Editor);
           ok(thisEditor instanceof Form.editors.Base);
           callback(['Melony', 'Frank']);
-        }
+        },
+        showPleaseSelect: false
       }
     }).render();
 
@@ -354,7 +365,8 @@
   test('Options as string of HTML', function() {
     var editor = new Editor({
       schema: {
-        options: '<option>Howard</option><option>Bree</option>'
+        options: '<option>Howard</option><option>Bree</option>',
+        showPleaseSelect: false
       }
     }).render();
 
@@ -372,7 +384,8 @@
 
     var editor = new Editor({
       schema: {
-        options: options
+        options: options,
+        showPleaseSelect: false
       }
     }).render();
 
@@ -398,7 +411,8 @@
 
     var editor = new Editor({
       schema: {
-        options: options
+        options: options,
+        showPleaseSelect: false
       }
     }).render();
 
@@ -602,7 +616,8 @@
 
       this.editor = new Editor({
         schema: {
-          options: this.options
+          options: this.options,
+          showPleaseSelect: false
         }
       }).render();
 
@@ -646,7 +661,8 @@ class=&gt;HTML&lt;/b&gt;&lt;</option>";
 
       var editor = new Editor({
         schema: {
-          options: options
+          options: options,
+          showPleaseSelect: false
         }
       }).render();
 
@@ -686,7 +702,8 @@ class=&gt;HTML&lt;/b&gt;&lt;</option>";
     }];
     var editor = new Editor({
       schema: {
-        options: options
+        options: options,
+        showPleaseSelect: false
       }
     }).render();
 
