@@ -201,7 +201,6 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     resetValue: function() {
       self = this;
       _.each(_.without(this.items, undefined), function(item) { self.removeItem(item); });
-      // this.setValue([]);
     },
 
     focus: function() {
