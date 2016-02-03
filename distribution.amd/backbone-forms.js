@@ -559,7 +559,7 @@ Form.validators = (function() {
     options = _.extend({
       type: 'number',
       message: this.errMessages.number,
-      regexp: /^-?[0-9]+(\.[0-9]+)?$/
+      regexp: /^[-+]?([0-9]*.[0-9]+|[0-9]+)$/
     }, options);
 
     return validators.regexp(options);
