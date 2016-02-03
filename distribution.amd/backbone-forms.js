@@ -26,7 +26,7 @@ var Form = Backbone.View.extend({
 
   /**
    * Constructor
-   * 
+   *
    * @param {Object} [options.schema]
    * @param {Backbone.Model} [options.model]
    * @param {Object} [options.data]
@@ -250,9 +250,14 @@ var Form = Backbone.View.extend({
 
     //Set the main element
     this.setElement($form);
-    
+
     //Set class
     $form.addClass(this.className);
+
+    //Set attributes
+    if (this.attributes) {
+      $form.attr(this.attributes)
+    }
 
     return this;
   },
@@ -343,7 +348,7 @@ var Form = Backbone.View.extend({
     }, options);
 
     this.model.set(this.getValue(), setOptions);
-    
+
     if (modelError) return modelError;
   },
 
@@ -466,26 +471,25 @@ var Form = Backbone.View.extend({
   }
 
 }, {
+    editors: {}
 
-  //STATICS
-  template: _.template('\
+});
+
+//Statics to add on after Form is declared
+Form.templateSettings = {
+    evaluate: /<%([\s\S]+?)%>/g,
+    interpolate: /<%=([\s\S]+?)%>/g,
+    escape: /<%-([\s\S]+?)%>/g
+};
+
+Form.template = _.template('\
     <form>\
      <div data-fieldsets></div>\
       <% if (submitButton) { %>\
         <button type="submit"><%= submitButton %></button>\
       <% } %>\
     </form>\
-  ', null, this.templateSettings),
-
-  templateSettings: {
-    evaluate: /<%([\s\S]+?)%>/g, 
-    interpolate: /<%=([\s\S]+?)%>/g, 
-    escape: /<%-([\s\S]+?)%>/g
-  },
-
-  editors: {}
-
-});
+  ', null, Form.templateSettings);
 
 
 //==================================================================================================
@@ -520,7 +524,7 @@ Form.validators = (function() {
         message: _.isFunction(options.message) ? options.message(options) : options.message
       };
 
-      if (value === null || value === undefined || value === false || value === '') return err;
+      if (value === null || value === undefined || value === false || value === '' || $.trim(value) === '' ) return err;
     };
   };
 
@@ -594,7 +598,7 @@ Form.validators = (function() {
     options = _.extend({
       type: 'email',
       message: this.errMessages.email,
-      regexp: /^[\w\-]{1,}([\w\-\+.]{1,1}[\w\-]{1,}){0,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/
+      regexp: /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i
     }, options);
 
     return validators.regexp(options);
@@ -2026,8 +2030,9 @@ Form.editors.Checkboxes = Form.editors.Select.extend({
 
   getValue: function() {
     var values = [];
+    var self = this;
     this.$('input[type=checkbox]:checked').each(function() {
-      values.push($(this).val());
+      values.push(self.$(this).val());
     });
     return values;
   },
@@ -2074,16 +2079,16 @@ Form.editors.Checkboxes = Form.editors.Select.extend({
           var val = (option.val || option.val === 0) ? option.val : '';
           itemHtml.append( $('<input type="checkbox" name="'+self.getName()+'" id="'+self.id+'-'+index+'" />').val(val) );
           if (option.labelHTML){
-            itemHtml.append( $('<label for="'+self.id+'-'+index+'">').html(option.labelHTML) );
+            itemHtml.append( $('<label for="'+self.id+'-'+index+'" />').html(option.labelHTML) );
           }
           else {
-            itemHtml.append( $('<label for="'+self.id+'-'+index+'">').text(option.label) );
+            itemHtml.append( $('<label for="'+self.id+'-'+index+'" />').text(option.label) );
           }
         }
       }
       else {
         itemHtml.append( $('<input type="checkbox" name="'+self.getName()+'" id="'+self.id+'-'+index+'" />').val(option) );
-        itemHtml.append( $('<label for="'+self.id+'-'+index+'">').text(option) );
+        itemHtml.append( $('<label for="'+self.id+'-'+index+'" />').text(option) );
       }
       html = html.add(itemHtml);
     });

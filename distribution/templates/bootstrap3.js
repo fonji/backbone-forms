@@ -56,7 +56,8 @@
   Form.editors.Base.prototype.className = 'form-control';
   Form.editors.Object.prototype.className = '';
   Form.editors.NestedModel.prototype.className = '';
-
+  Form.editors.Checkbox.prototype.className = 'checkbox';
+  Form.editors.Checkboxes.prototype.className = 'checkbox';
   Form.Field.errorClassName = 'has-error';
 
 
@@ -76,7 +77,7 @@
         <button type="button" class="btn bbf-del" data-action="remove">&times;</button>\
       </li>\
     ');
-    
+
 
     Form.editors.List.Object.template = Form.editors.List.NestedModel.template = _.template('\
       <div class="bbf-list-modal"><%= summary %></div>\
