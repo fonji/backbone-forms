@@ -1275,7 +1275,7 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
   resetValue: function() {
     this.setValue(_.result(this, 'defaultValue'));
     // TODO: shouldn't setValue() trigger change?
-    // this.trigger('change', this);
+    this.trigger('change', this);
   },
 
   /**
