@@ -23,7 +23,7 @@ Form.Fieldset = Backbone.View.extend({
 
     //Store the fields for this fieldset
     this.fields = _.pick(options.fields, schema.fields);
-    
+
     //Override defaults
     this.template = options.template || schema.template || this.template || this.constructor.template;
   },
@@ -108,8 +108,31 @@ Form.Fieldset = Backbone.View.extend({
     });
 
     Backbone.View.prototype.remove.call(this);
+  },
+
+  /**
+   * Hide the fieldset
+   * Will reset the fiels values by default
+   */
+  hide: function(reset){
+    this.$el.hide();
+    if (reset !== false) {
+      _.each(this.fields, function(field) {
+        if (field.schema.resetOnHide == null || field.schema.resetOnHide) {
+          field.editor.resetValue();
+        }
+      });
+    }
+  },
+
+  /**
+   * Show the fieldset
+   * If it has been previously hidden by hide()
+   */
+  show: function(){
+    this.$el.show();
   }
-  
+
 }, {
   //STATICS
 

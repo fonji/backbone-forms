@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
   /**
    * List editor
-   * 
+   *
    * An array editor. Creates a list of other editor items.
    *
    * Special options:
@@ -75,9 +75,9 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
       this.setElement($el);
       this.$el.attr('id', this.id);
       this.$el.attr('name', this.key);
-            
+
       if (this.hasFocus) this.trigger('blur', this);
-      
+
       return this;
     },
 
@@ -99,11 +99,11 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
         Editor: this.Editor,
         key: this.key
       }).render();
-      
+
       var _addItem = function() {
         self.items.push(item);
         self.$list.append(item.el);
-        
+
         item.editor.on('all', function(event) {
           if (event === 'change') return;
 
@@ -137,11 +137,11 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
             self.trigger('blur', self);
           }, 0);
         }, self);
-        
+
         if (userInitiated || value) {
           item.addEventTriggered = true;
         }
-        
+
         if (userInitiated) {
           self.trigger('add', self, item.editor);
           self.trigger('change', self);
@@ -158,7 +158,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
         _addItem();
         item.editor.focus();
       }
-      
+
       return item;
     },
 
@@ -175,7 +175,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
       this.items[index].remove();
       this.items.splice(index, 1);
-      
+
       if (item.addEventTriggered) {
         this.trigger('remove', this, item.editor);
         this.trigger('change', this);
@@ -197,18 +197,23 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
       this.value = value;
       this.render();
     },
-    
+
+    resetValue: function() {
+      var self = this;
+      _.each(_.without(this.items, undefined), function(item) { self.removeItem(item); });
+    },
+
     focus: function() {
       if (this.hasFocus) return;
 
       if (this.items[0]) this.items[0].editor.focus();
     },
-    
+
     blur: function() {
       if (!this.hasFocus) return;
 
       var focusedItem = _.find(this.items, function(item) { return item.editor.hasFocus; });
-      
+
       if (focusedItem) focusedItem.editor.blur();
     },
 
@@ -220,14 +225,13 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
       Form.editors.Base.prototype.remove.call(this);
     },
-    
+
     /**
      * Run validation
-     * 
+     *
      * @return {Object|Null}
      */
     validate: function() {
-      if (!this.validators) return null;
 
       //Collect errors
       var errors = _.map(this.items, function(item) {
@@ -297,7 +301,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
     render: function() {
       var $ = Backbone.$;
-      
+
       //Create editor
       this.editor = new this.Editor({
         key: this.key,
@@ -315,7 +319,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
       //Replace the entire element so there isn't a wrapper tag
       this.setElement($el);
-        
+
       return this;
     },
 
@@ -326,11 +330,11 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     setValue: function(value) {
       this.editor.setValue(value);
     },
-    
+
     focus: function() {
       this.editor.focus();
     },
-    
+
     blur: function() {
       this.editor.blur();
     },
@@ -346,6 +350,10 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
           formValues = this.list.form ? this.list.form.getValue() : {},
           validators = this.schema.validators,
           getValidator = this.getValidator;
+
+      if (this.editor.nestedForm && this.editor.nestedForm.validate) {
+        return this.editor.nestedForm.validate();
+      }
 
       if (!validators) return null;
 
@@ -399,7 +407,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
 
   /**
-   * Base modal object editor for use with the List editor; used by Object 
+   * Base modal object editor for use with the List editor; used by Object
    * and NestedModal list types
    */
   Form.editors.List.Modal = Form.editors.Base.extend({
@@ -418,9 +426,9 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
      */
     initialize: function(options) {
       options = options || {};
-      
+
       Form.editors.Base.prototype.initialize.call(this, options);
-      
+
       //Dependencies
       if (!Form.editors.List.Modal.ModalAdapter) throw new Error('A ModalAdapter is required');
 
@@ -469,7 +477,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
      * Function which returns a generic string representation of an object
      *
      * @param {Object} value
-     * 
+     *
      * @return {String}
      */
     itemToString: function(value) {
@@ -506,7 +514,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
       //If there's a specified toString use that
       if (schema.itemToString) return schema.itemToString(value);
-      
+
       //Otherwise use the generic method or custom overridden method
       return this.itemToString(value);
     },
@@ -531,7 +539,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
       this.trigger('focus', this);
 
       modal.on('cancel', this.onModalClosed, this);
-      
+
       modal.on('ok', _.bind(this.onModalSubmitted, this));
     },
 
@@ -555,7 +563,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
       this.renderSummary();
 
       if (isNew) this.trigger('readyToAdd');
-      
+
       this.trigger('change', this);
 
       this.onModalClosed();
@@ -579,16 +587,16 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     setValue: function(value) {
       this.value = value;
     },
-    
+
     focus: function() {
       if (this.hasFocus) return;
 
       this.openEditor();
     },
-    
+
     blur: function() {
       if (!this.hasFocus) return;
-      
+
       if (this.modal) {
         this.modal.trigger('cancel');
       }
@@ -603,7 +611,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     //Defaults to BootstrapModal (http://github.com/powmedia/backbone.bootstrap-modal)
     //Can be replaced with another adapter that implements the same interface.
     ModalAdapter: Backbone.BootstrapModal,
-    
+
     //Make the wait list for the 'ready' event before adding the item to the list
     isAsync: true
   });
@@ -646,7 +654,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
       //If there's a specified toString use that
       if (schema.itemToString) return schema.itemToString(value);
-      
+
       //Otherwise use the model
       return new (schema.model)(value).toString();
     }

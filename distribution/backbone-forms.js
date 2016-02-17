@@ -678,7 +678,7 @@ Form.Fieldset = Backbone.View.extend({
 
     //Store the fields for this fieldset
     this.fields = _.pick(options.fields, schema.fields);
-    
+
     //Override defaults
     this.template = options.template || schema.template || this.template || this.constructor.template;
   },
@@ -763,8 +763,31 @@ Form.Fieldset = Backbone.View.extend({
     });
 
     Backbone.View.prototype.remove.call(this);
+  },
+
+  /**
+   * Hide the fieldset
+   * Will reset the fiels values by default
+   */
+  hide: function(reset){
+    this.$el.hide();
+    if (reset !== false) {
+      _.each(this.fields, function(field) {
+        if (field.schema.resetOnHide == null || field.schema.resetOnHide) {
+          field.editor.resetValue();
+        }
+      });
+    }
+  },
+
+  /**
+   * Show the fieldset
+   * If it has been previously hidden by hide()
+   */
+  show: function(){
+    this.$el.show();
   }
-  
+
 }, {
   //STATICS
 
@@ -986,6 +1009,28 @@ Form.Field = Backbone.View.extend({
   },
 
   /**
+   * Hide the field
+   * Will reset the editor's value by default
+   */
+  hide: function(reset){
+    if (reset == null) {
+      reset = this.schema.resetOnHide == null ? true : this.schema.resetOnHide;
+    }
+    this.$el.hide();
+    if (reset) {
+      this.editor.resetValue();
+    }
+  },
+
+  /**
+   * Show the field
+   * If it has been previously hidden by hide()
+   */
+  show: function(){
+    this.$el.show();
+  },
+
+  /**
    * Check the validity of the field
    *
    * @return {String}
@@ -1015,7 +1060,7 @@ Form.Field = Backbone.View.extend({
     this.$el.addClass(this.errorClassName);
 
     //Set error message
-    this.$('[data-error]').html(msg);
+    this.$('[data-error]').last().html(msg);
   },
 
   /**
@@ -1172,7 +1217,7 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
       this.value = options.value;
     }
 
-    if (this.value === undefined) this.value = this.defaultValue;
+    if (this.value === undefined) this.value = _.result(this, 'defaultValue');
 
     //Store important data
     _.extend(this, _.pick(options, 'key', 'form'));
@@ -1223,13 +1268,23 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
   },
 
   /**
+   * Reset editor value
+   * Sets the default value
+   */
+  resetValue: function() {
+    this.setValue(_.result(this, 'defaultValue'));
+    // TODO: shouldn't setValue() trigger change?
+    this.trigger('change', this);
+  },
+
+  /**
    * Give the editor focus
    * Extend and override this method
    */
   focus: function() {
     throw new Error('Not implemented');
   },
-  
+
   /**
    * Remove focus from the editor
    * Extend and override this method
@@ -1312,11 +1367,11 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
     if (_.isRegExp(validator)) {
       return validators.regexp({ regexp: validator });
     }
-    
+
     //Use a built-in validator if given a string
     if (_.isString(validator)) {
       if (!validators[validator]) throw new Error('Validator "'+validator+'" not found');
-      
+
       return validators[validator]();
     }
 
@@ -1326,10 +1381,10 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
     //Use a customised built-in validator if given an object
     if (_.isObject(validator) && validator.type) {
       var config = validator;
-      
+
       return validators[config.type](config);
     }
-    
+
     //Unkown validator type
     throw new Error('Invalid validator: ' + validator);
   }
@@ -2274,6 +2329,12 @@ Form.editors.NestedModel = Form.editors.Object.extend({
  * @param {String[]} [options.monthNames]     Month names. Default: Full English names
  */
 Form.editors.Date = Form.editors.Base.extend({
+  defaultValue: function() {
+    var date = new Date();
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  },
 
   events: {
     'change select':  function() {

@@ -206,6 +206,28 @@ Form.Field = Backbone.View.extend({
   },
 
   /**
+   * Hide the field
+   * Will reset the editor's value by default
+   */
+  hide: function(reset){
+    if (reset == null) {
+      reset = this.schema.resetOnHide == null ? true : this.schema.resetOnHide;
+    }
+    this.$el.hide();
+    if (reset) {
+      this.editor.resetValue();
+    }
+  },
+
+  /**
+   * Show the field
+   * If it has been previously hidden by hide()
+   */
+  show: function(){
+    this.$el.show();
+  },
+
+  /**
    * Check the validity of the field
    *
    * @return {String}
@@ -235,7 +257,7 @@ Form.Field = Backbone.View.extend({
     this.$el.addClass(this.errorClassName);
 
     //Set error message
-    this.$('[data-error]').html(msg);
+    this.$('[data-error]').last().html(msg);
   },
 
   /**

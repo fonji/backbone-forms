@@ -10,6 +10,12 @@
  * @param {String[]} [options.monthNames]     Month names. Default: Full English names
  */
 Form.editors.Date = Form.editors.Base.extend({
+  defaultValue: function() {
+    var date = new Date();
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  },
 
   events: {
     'change select':  function() {
