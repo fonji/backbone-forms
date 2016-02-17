@@ -211,7 +211,7 @@ Form.Field = Backbone.View.extend({
    */
   hide: function(reset){
     if (reset == null) {
-      reset = true;
+      reset = this.schema.resetOnHide == null ? true : this.schema.resetOnHide;
     }
     this.$el.hide();
     if (reset) {

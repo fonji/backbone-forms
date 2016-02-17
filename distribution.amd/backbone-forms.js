@@ -759,13 +759,12 @@ Form.Fieldset = Backbone.View.extend({
    * Will reset the fiels values by default
    */
   hide: function(reset){
-    if (reset == null) {
-      reset = true;
-    }
     this.$el.hide();
-    if (reset) {
+    if (reset !== false) {
       _.each(this.fields, function(field) {
-        field.editor.resetValue();
+        if (field.schema.resetOnHide == null || field.schema.resetOnHide) {
+          field.editor.resetValue();
+        }
       });
     }
   },
@@ -1004,7 +1003,7 @@ Form.Field = Backbone.View.extend({
    */
   hide: function(reset){
     if (reset == null) {
-      reset = true;
+      reset = this.schema.resetOnHide == null ? true : this.schema.resetOnHide;
     }
     this.$el.hide();
     if (reset) {
